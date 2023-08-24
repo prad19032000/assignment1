@@ -1,0 +1,72 @@
+-- this is the solution for the first question
+USE my_db;
+create table tech(id int,
+technology varchar(25));
+
+insert into tech values(1,'DS'),
+(1,'Tab'),
+(1,'SQL'),
+(2,'R'),
+(2,'PBI'),
+(1,'PYTHON');
+
+select * from tech;
+
+select id from tech;
+
+SELECT id
+FROM tech
+WHERE technology = 'PYTHON' AND id IN (
+    SELECT id
+    FROM tech
+    WHERE technology = 'DS'
+) AND id IN (
+    SELECT id
+    FROM tech
+    WHERE technology = 'SQL'
+)AND id IN (
+    SELECT id
+    FROM tech
+    WHERE technology = 'TAB')
+group by id;
+
+select * from tech;
+
+select id from tech
+group by id
+having count(id)=4;
+
+-- id=1 has all the tech skills.
+
+-- this is the solution for the second question
+
+use my_db;
+create table product_info(pr_id int,
+prod varchar(25));
+
+insert into product_info values(1001,'Blog'),
+(1002,'YouTube'),
+(1003,'Education');
+
+select * from product_info;
+
+use my_db;
+create table product_info_likes(user_id int, pr_id int,
+liked_date date);
+
+INSERT INTO product_info_likes 
+VALUES
+    (1, 1001, '2023-03-19'),
+    (2, 1003, '2023-01-18');
+select * from product_info_likes;
+
+WITH cte AS (
+    SELECT pf.pr_id AS product_id, pl.liked_date
+    FROM product_info pf
+    LEFT JOIN product_info_likes pl ON pf.pr_id = pl.pr_id
+)
+SELECT cte.product_id, cte.liked_date
+FROM cte
+where liked_date is null;
+
+-- Ans:The product_id : 1002 has 0 likes given.
